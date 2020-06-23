@@ -17,11 +17,11 @@ app.engine('handlebars', handlebars({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
 subscriber.on("message", function (channel, message) {
-    publicacao.add(channel, message)
+    publicacao.add(channel, message, new Date().getHours(), new Date().getMinutes(), new Date().getSeconds())
 });
 
 subscriber.on("pmessage", function (pattern, channel, message) {
-    publicacao.add(channel + ` (pattern : ${pattern})`, message)
+    publicacao.add(channel + ` (pattern : ${pattern})`, message, new Date().getHours(), new Date().getMinutes(), new Date().getSeconds())
 })
 
 app.get('/', (req, res) => {

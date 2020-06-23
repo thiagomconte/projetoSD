@@ -13,7 +13,6 @@ app.set('view engine', 'handlebars');
 
 const publisher = redis.createClient();
 
-
 app.get('/',(req,res) => {
     res.render("pub",{mensagens: publicacao.listar()})
 })
@@ -29,7 +28,7 @@ app.get('/channels',(req,res) => {
 })
 
 app.post('/',(req, res) => {
-    publicacao.add(req.body.canal, req.body.publicacao)
+    publicacao.add(req.body.canal, req.body.publicacao, new Date().getHours(), new Date().getMinutes(), new Date().getSeconds())
     publisher.publish(req.body.canal, req.body.publicacao)
     res.redirect("/")
 })
@@ -41,6 +40,6 @@ app.get('/limpar',(req,res) => {
 
 app.use(express.static(__dirname + "public"))
 
-app.listen(3001,() => {
+app.listen(3000,() => {
     console.log(`servidor na PORT 3001`);
 })
