@@ -13,33 +13,33 @@ app.set('view engine', 'handlebars');
 
 const publisher = redis.createClient();
 
-app.get('/',(req,res) => {
-    res.render("pub",{mensagens: publicacao.listar()})
+app.get('/', (req, res) => {
+    res.render("pub", { mensagens: publicacao.listar() })
 })
 
-app.get('/channels',(req,res) => {
+app.get('/channels', (req, res) => {
     publisher.pubsub("channels", (err, channels) => {
-        if(err){
+        if (err) {
             res.send(err)
-        }else{
-            res.render("channels",{channels: channels})
+        } else {
+            res.render("channels", { channels: channels })
         }
     })
 })
 
-app.post('/',(req, res) => {
+app.post('/', (req, res) => {
     publicacao.add(req.body.canal, req.body.publicacao, new Date().getHours(), new Date().getMinutes(), new Date().getSeconds())
     publisher.publish(req.body.canal, req.body.publicacao)
     res.redirect("/")
 })
 
-app.get('/limpar',(req,res) => {
+app.get('/limpar', (req, res) => {
     publicacao.limpar()
     res.redirect('/')
 })
 
 app.use(express.static(__dirname + "public"))
 
-app.listen(3000,() => {
+app.listen(3000, () => {
     console.log(`servidor na PORT 3001`);
 })
